@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web3 Contract Interaction</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+</head>
+<body>
+
+    <h1>SimpleStorage Contract Interaction</h1>
+    <button id="retrieveButton">Retrieve Stored Value</button>
+    <button id="storeButton">Store New Value</button>
+    <p>Stored Value: <span id="storedValue">-</span></p>
+
+    <script>
+        // Адрес контракта и ABI (из Truffle)
+        const contractAddress = 'ТВОЙ_АДРЕС_КОНТРАКТА';  // Вставь сюда адрес контракта
+        const contractABI = [
+            {
+                "constant": true,
+                "inputs": [],
+                "name": "retrieve",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "name": "num",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "store",
+                "outputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            }
+        ];
+
+        // Проверяем, подключен ли MetaMask
+        if (typeof window.ethereum !== 'undefined') {
+            const web3 = new Web3(window.ethereum);
+
+            // Подключаем MetaMask
+            window.ethereum.request({ method: 'eth_requestAccounts' })
+                .then(accounts => {
+                    const userAccount = accounts[0];
+
+                    // Получаем контракт
+                    const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+                    // Получаем текущие данные из контракта
+                    document.getElementById('retrieveButton').onclick = async () => {
+                        const value = await contract.methods.retrieve().call();
+                        document.getElementById('storedValue').textContent = value;
+                    };
+
+                    // Отправляем данные в контракт
+                    document.getElementById('storeButton').onclick = async () => {
+                        const value = prompt('Enter a number to store in the contract:');
+                        if (value !== null) {
+                            await contract.methods.store(value).send({ from: userAccount });
+                            alert('Value stored!');
+                        }
+                    };
+                })
+                .catch(err => {
+                    console.error('User denied account access', err);
+                });
+        } else {
+            alert('Please install MetaMask!');
+        }
+    </script>
+
+</body>
+</html>

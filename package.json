@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "solc": "^0.8.0",
+    "truffle": "^5.5.7",
+    "web3": "^1.7.4",
+    "winston": "^3.17.0"
+  },
+  "name": "mygang.py",
+  "version": "1.0.0",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
